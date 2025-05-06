@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Health Monitor UI</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #1e1e1e;
+      color: white;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px;
+    }
+
+    .heart-section {
+      background: linear-gradient(to right, #124734, #1e4f32);
+      padding: 20px;
+      border-radius: 20px 20px 0 0;
+    }
+
+    .heart-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .heart-text h2 {
+      margin: 0;
+      font-size: 18px;
+    }
+
+    .heart-text p {
+      color: red;
+      font-weight: bold;
+      margin: 5px 0 0;
+    }
+
+    .wave {
+      height: 50px;
+      width: 100px;
+    }
+
+    .status-bar {
+      display: flex;
+      justify-content: space-around;
+      background: #0b2235;
+      padding: 10px;
+      border-radius: 0 0 20px 20px;
+    }
+
+    .status-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .status-item img {
+      height: 30px;
+    }
+
+    .posters {
+      display: flex;
+      justify-content: space-around;
+      margin: 15px 10px;
+    }
+
+    .poster {
+      width: 45%;
+      border-radius: 10px;
+    }
+
+    .functions {
+      display: flex;
+      justify-content: space-around;
+      margin: 15px 10px;
+    }
+
+    .function-box {
+      width: 50px;
+      height: 50px;
+      background: #333;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .function-box img {
+      width: 25px;
+      height: 25px;
+    }
+
+    .reminder-section {
+      margin: 10px;
+    }
+
+    .reminder-box {
+      background: linear-gradient(to right, #999, #ccc);
+      padding: 20px;
+      margin-bottom: 10px;
+      border-radius: 10px;
+    }
+
+    .footer {
+      display: flex;
+      justify-content: space-around;
+      padding: 10px;
+      background: #111;
+    }
+
+    .footer img {
+      height: 25px;
+    }
+    
+    /* OVERLAY & CENTERING */
+   .modal {
+     position: fixed;
+     top: 0; left: 0;
+     width: 100%; height: 100%;
+     background: rgba(0,0,0,0.6);
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     z-index: 999;
+    }
+
+    /* THE CONTENT BOX */
+   .modal-content {
+     background: #222;
+     color: #fff;
+     padding: 20px;
+     border-radius: 8px;
+     width: 90%;
+     max-width: 400px;
+     box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    }
+
+    /* SETTINGS FORM GRID */
+   .form-grid {
+     display: grid;
+     grid-template-columns: 1fr 2fr;
+     grid-gap: 12px 16px;
+     align-items: center;
+     margin-bottom: 16px;
+    }
+
+    /* PROFILE VIEW GRID */
+   .profile-grid {
+     display: grid;
+     grid-template-columns: auto 1fr;
+     grid-gap: 8px 12px;
+     margin: 16px 0;
+    }
+
+    /* PROFILE PHOTO */
+   .profile-photo {
+     text-align: center;
+     margin-bottom: 16px;
+    }
+
+   .profile-photo img {
+     width: 80px;
+     height: 80px;
+     border-radius: 50%;
+     border: 2px solid #fff;
+    }
+
+    /* BUTTON ROW */
+   .buttons {
+     text-align: right;
+     margin-top: 12px;
+    }
+
+   .buttons button {
+     margin-left: 8px;
+     padding: 6px 12px;
+     border: none;
+     border-radius: 4px;
+     cursor: pointer;
+     background: #444;
+     color: #fff;
+    }
+
+   .buttons button:hover {
+     background: #555;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="header">
+    <img src="logo_animation_ai-removebg-preview (1).png" alt="Logo" height="60" />
+  </div>
+
+  <div class="heart-section">
+    <div class="heart-content">
+      <div class="heart-text">
+        <h2>Heart Rate</h2>
+        <p>96 bpm</p>
+      </div>
+      <img src="Vector ai medis.png" alt="Waveform" class="wave" />
+    </div>
+  </div>
+
+  <div class="status-bar">
+    <div class="status-item">
+      <img src="oxygen.png" alt="Oxygen">
+      <p>75%</p>
+    </div>
+    <div class="status-item">
+      <img src="BP.png" alt="Blood Pressure">
+      <p style="color: #0f0">120/80 mmHg - Normal</p>
+    </div>
+  </div>
+
+  <div class="posters">
+    <img src="poster1.png" class="poster" alt="Poster 1">
+    <img src="poster2.png" class="poster" alt="Poster 2">
+  </div>
+
+  <div class="functions">
+    <div class="function-box">
+      <img src="pill.jpg" alt="Pill Icon" id="pillIcon" width="40" style="cursor:pointer; margin: 10px;" />
+    </div>
+    <div class="function-box">
+      <img src="jam.png" alt="Alarm" onclick="setAlarm()">
+    </div>
+    <div class="function-box">
+      <img src="setting.png" alt="Setting">
+    </div>
+  </div>
+
+  <div class="reminder-section">
+    <div class="reminder-box">
+      <p>Drink your medicine at 2:00 PM</p>
+    </div>
+    <div class="reminder-box">
+      <p>Take next dose at 8:00 PM</p>
+    </div>
+  </div>
+
+  <div class="footer">
+    <img src="home.png" id="homeIcon" alt="Home" width="40" style="cursor:pointer;" />
+    <img src="profile.png" id="profileIcon" alt="Profile" width="40" style="cursor:pointer;" />
+  </div>
+  
+    <!-- === SETTINGS MODAL === -->
+<div id="settingsModal" class="modal">
+  <div class="modal-content">
+    <h3>⚙️ Edit Profil</h3>
+    <form id="settingsForm">
+      <div class="form-grid">
+        <label for="nameInput">Nama:</label>
+        <input type="text" id="nameInput" />
+
+        <label for="ageInput">Usia:</label>
+        <input type="number" id="ageInput" />
+
+        <label for="illnessInput">Penyakit:</label>
+        <input type="text" id="illnessInput" />
+
+        <label for="bioInput">Bio:</label>
+        <textarea id="bioInput" rows="3"></textarea>
+      </div>
+      <div class="buttons">
+        <button type="button" id="btnSaveSettings">💾 Simpan</button>
+        <button type="button" class="btnClose" data-modal="settingsModal">❌ Tutup</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- === PROFILE MODAL === -->
+<div id="profileModal" class="modal">
+  <div class="modal-content">
+    <h3>👤 User Profile</h3>
+    <div class="profile-photo">
+      <img src="PHOTO.jpg" alt="User Photo" width="80" style="border-radius:50%; border:2px solid #fff;" />
+      <p><strong>ID:</strong> #U001-AI</p>
+    </div>
+    <p><strong>Name:</strong> <span id="profileName">–</span></p>
+    <p><strong>Age:</strong> <span id="profileAge">–</span></p>
+    <p><strong>illness:</strong> <span id="profileIllness">–</span></p>
+    <p><strong>Bio:</strong> <span id="profileBio">–</span></p>
+    <div class="buttons">
+      <button id="btnEditProfile">✏️ Edit</button>
+      <button class="btnClose" data-modal="profileModal">❌ Tutup</button>
+      <button onclick="goToKonektivitas()">Go to Konektivitas Page</button>
+  </div>
+  </div>
+</div>
+
+ <script>
+    function setAlarm() {
+      alert("Alarm set for medicine reminder!");
+      // Additional alarm logic can be added here (e.g., Notification API)
+    }
+
+    // Alarm otomatis (contoh: alarm jam 14:00)
+function autoMedicineReminder() {
+  const now = new Date();
+  const target = new Date();
+  target.setHours(14, 0, 0, 0); // 14:00 atau 2 PM
+
+  if (now > target) {
+    target.setDate(target.getDate() + 1); // besok
+  }
+
+  const timeout = target - now;
+
+  setTimeout(() => {
+    if (Notification.permission === "granted") {
+      new Notification("Time to take medicine!", {
+        body: "Take the medicine as scheduled at 2:00 PM.",
+      });
+    } else {
+      alert("Time to take medicine!");
+    }
+  }, timeout);
+}
+
+if ("Notification" in window && Notification.permission !== "granted") {
+  Notification.requestPermission();
+}
+
+autoMedicineReminder(); // panggil saat page load
+
+const diseaseToMedicine = {
+  "flu": "Paracetamol, Vitamin C, plenty of rest",
+  "fever": "Ibuprofen or Paracetamol",
+  "headache": "Paracetamol or Aspirin",
+  "asthma": "Inhaler bronkodilator",
+  "diabetes": "Insulin or Metformin",
+};
+
+function suggestMedicine(disease) {
+  const lower = disease.toLowerCase();
+  const suggestion = diseaseToMedicine[lower] || "Consult a doctor.";
+  alert(`Medication Suggestions for ${disease}: ${suggestion}`);
+}
+
+document.getElementById("pillIcon").onclick = function () {
+  const profile = localStorage.getItem("userProfile");
+  if (profile) {
+    const illness = JSON.parse(profile).illness;
+    if (illness) {
+      suggestMedicine(illness);
+    } else {
+      alert("No illness recorded. Please update your profile first.");
+    }
+  } else {
+    alert("No profile found. Please set your profile.");
+  }
+};
+
+  document.getElementById("homeIcon").onclick = function () {
+    // Ganti "index.html" dengan nama file homepage Anda
+    window.location.href = "homepage.html";
+  };
+
+  // — Helper untuk open/close modal
+  function openModal(id) {
+    document.getElementById(id).style.display = 'flex';
+  }
+  function closeModal(id) {
+    document.getElementById(id).style.display = 'none';
+  }
+
+  // — Ambil / simpan profile di localStorage
+  function getProfile() {
+    return JSON.parse(localStorage.getItem('userProfile') || '{}');
+  }
+  function saveProfileData(data) {
+    localStorage.setItem('userProfile', JSON.stringify(data));
+  }
+
+  // — Render profile di modal View
+  function renderProfileView() {
+    const p = getProfile();
+    document.getElementById('profileName').textContent     = p.name    || '-';
+    document.getElementById('profileAge').textContent      = p.age     || '-';
+    document.getElementById('profileIllness').textContent  = p.illness || '-';
+    document.getElementById('profileBio').textContent      = p.bio     || '-';
+  }
+
+  // — Prefill form Settings
+  function prefillSettingsForm() {
+    const p = getProfile();
+    document.getElementById('nameInput').value    = p.name    || '';
+    document.getElementById('ageInput').value     = p.age     || '';
+    document.getElementById('illnessInput').value = p.illness || '';
+    document.getElementById('bioInput').value     = p.bio     || '';
+  }
+
+  // — Setup event setelah DOM siap
+  document.addEventListener('DOMContentLoaded', () => {
+    // Tombol di footer/header kamu:
+    document.getElementById('profileIcon')
+            .addEventListener('click', () => {
+              renderProfileView();
+              openModal('profileModal');
+            });
+    document.querySelector("img[alt='Setting']")
+            .addEventListener('click', () => {
+              prefillSettingsForm();
+              openModal('settingsModal');
+            });
+
+    // Save Settings
+    document.getElementById('btnSaveSettings')
+            .addEventListener('click', () => {
+              const data = {
+                name:    document.getElementById('nameInput').value.trim(),
+                age:     document.getElementById('ageInput').value.trim(),
+                illness: document.getElementById('illnessInput').value.trim(),
+                bio:     document.getElementById('bioInput').value.trim()
+              };
+              saveProfileData(data);
+              alert('Profile saved successfully!');
+              closeModal('settingsModal');
+            });
+
+    // Edit langsung dari Profile modal
+    document.getElementById('btnEditProfile')
+            .addEventListener('click', () => {
+              closeModal('profileModal');
+              prefillSettingsForm();
+              openModal('settingsModal');
+            });
+
+    // Semua tombol “❌ Tutup”
+    document.querySelectorAll('.btnClose')
+            .forEach(btn => {
+              btn.addEventListener('click', () => closeModal(btn.dataset.modal));
+            });
+  });
+
+  function goToKonektivitas() {
+  window.location.href = "konektifitas pages.html";
+}
+  
+  </script>
+</body>
+</html>

@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>NeuroMed</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+    .section {
+      display: none;
+      height: 100vh;
+      width: 100%;
+      color: white;
+      text-align: center;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+    #homepage {
+      background-color: black;
+      display: flex;
+    }
+    #loginpage {
+      background-color: #225843;
+      padding-top: 100px;
+    }
+    #mainpage {
+      background-color: #1f1f1f;
+      padding: 50px;
+      color: white;
+    }
+    h1 {
+      color: turquoise;
+    }
+    input {
+      display: block;
+      margin: 10px auto;
+      padding: 10px;
+      width: 300px;
+    }
+    button {
+      padding: 10px 20px;
+      margin-top: 10px;
+      background-color: black;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    .social-icons img {
+      width: 30px;
+      margin: 10px;
+      cursor: pointer;
+    }
+    .nav-btn {
+      margin-top: 20px;
+      text-decoration: underline;
+      color: turquoise;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+
+    .social-icon {
+      width: 40px;
+      height: 40px;
+      margin: 0 10px;
+    }
+  
+  </style>
+</head>
+<body>
+
+  <!-- Index -->
+  <div id="index" class="section" style="display: flex;">
+    <h1>NeuroMed</h1>
+    <p>AI That Cares, Health That Thrives</p>
+    <button onclick="goToSection('loginpage')">Enter</button>
+  </div>
+
+  <!-- Login Page -->
+  <div id="loginpage" class="section">
+    <h1>NeuroMed</h1>
+
+    <script type="module">
+        import Chatbot from "https://cdn.jsdelivr.net/npm/flowise-embed/dist/web.js"
+        Chatbot.init({
+            chatflowid: "1f2dbb5b-a5fd-4a8d-a031-b2f361f5c53b",
+            apiHost: "https://cloud.flowiseai.com",
+        })
+    </script>
+    
+    <form onsubmit="return validateLogin(event)">
+      <input type="text" id="username" placeholder="Email or Username" required />
+      <input type="password" id="password" placeholder="Password" required />
+      <div style="text-align: right; margin-right: 15%;"><small><a href="#" style="color: white;">forgot password?</a></small></div>
+      <button type="submit">Log in</button>
+    </form>
+    <div class="social">
+      <a href="https://sherly.nugraha@student.president.ac.id" target="_blank">
+        <img src="google.png" alt="Google" class="social-icon">
+      </a>
+      <a href="https://www.instagram.com/maryacans" target="_blank">
+        <img src="ig.jpg" alt="Instagram" class="social-icon">
+      </a>
+    </div>
+    <p>Don't have an account? 
+        <button class="nav-btn" onclick="goToSection('signuppage')">Sign up here</button>
+    </p>
+    <button class="nav-btn" onclick="goToSection('homepage')">Back to Homepage</button>
+  </div>
+
+<!-- Sign Up Page -->
+<div id="signuppage" class="section">
+    <h1>Sign Up - NeuroMed</h1>
+    <form onsubmit="return validateSignup(event)">
+      <input type="text" id="newUsername" placeholder="Create Username" required />
+      <input type="email" id="newEmail" placeholder="Email Address" required />
+      <input type="password" id="newPassword" placeholder="Create Password" required />
+      <button type="submit">Sign Up</button>
+    </form>
+    <p>Already have an account? <button class="nav-btn" onclick="goToSection('loginpage')">Log in here</button></p>
+    <button class="nav-btn" onclick="goToSection('homepage')">Back to Homepage</button>
+  </div>
+  
+  <!-- Main Page -->
+  <div id="main" class="section">
+    <h1>Welcome to NeuroMed Dashboard</h1>
+    <p>This is a protected page only accessible after login.</p>
+    <button class="nav-btn" onclick="goToSection('homepage')">Logout</button>
+  </div>
+
+  <script>
+    function goToSection(sectionId) {
+    // Sembunyikan semua section
+    const sections = document.querySelectorAll('.section');
+    sections.forEach(sec => sec.style.display = 'none');
+
+    // Tampilkan section yang dipilih
+    const target = document.getElementById(sectionId);
+    if (target) {
+      target.style.display = 'flex';
+    }
+  }
+
+  function setAlarm() {
+    alert("Alarm set for medicine reminder!");
+    // Additional alarm logic can be added here (e.g., Notification API)
+  }
+
+  // Alarm otomatis
+  function autoMedicineReminder() {
+    const now = new Date();
+    const target = new Date();
+    target.setHours(14, 0, 0, 0);
+
+    if (now > target) {
+      target.setDate(target.getDate() + 1);
+    }
+
+    const timeout = target - now;
+
+    setTimeout(() => {
+      if (Notification.permission === "granted") {
+        new Notification("Time to take medicine!", {
+          body: "Take the medicine as scheduled at 2:00 PM.",
+        });
+      } else {
+        alert("Time to take medicine!");
+      }
+    }, timeout);
+  }
+
+  if ("Notification" in window && Notification.permission !== "granted") {
+    Notification.requestPermission();
+  }
+
+  autoMedicineReminder();
+
+  const diseaseToMedicine = {
+    "flu": "Paracetamol, Vitamin C, plenty of rest",
+    "fever": "Ibuprofen or Paracetamol",
+    "headache": "Paracetamol or Aspirin",
+    "asthma": "Inhaler bronkodilator",
+    "diabetes": "Insulin or Metformin",
+  };
+
+  function suggestMedicine(disease) {
+    const lower = disease.toLowerCase();
+    const suggestion = diseaseToMedicine[lower] || "Consult a doctor.";
+    alert(`Medication Suggestions for  ${disease}: ${suggestion}`);
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById("pillIcon")?.addEventListener('click', () => {
+      const profile = localStorage.getItem("userProfile");
+      if (profile) {
+        const illness = JSON.parse(profile).illness;
+        if (illness) {
+          suggestMedicine(illness);
+        } else {
+          alert("No illness recorded. Please update your profile first.");
+        }
+      } else {
+        alert("No profile found. Please set your profile.");
+      }
+    });
+
+    function validateLogin(event) {
+    event.preventDefault(); // prevent form submission
+
+    const username = document.getElementById("username").value.trim();
+    const password = document.getElementById("password").value.trim();
+
+    // Simple validation
+    if (username === "admin" && password === "1234") {
+      goToSection('main'); // Go to main dashboard
+    } else {
+      alert("Invalid username or password.");
+    }
+  }
+
+  function validateSignup(event) {
+    event.preventDefault(); // prevent form submission
+
+    const newUsername = document.getElementById("newUsername").value.trim();
+    const newEmail = document.getElementById("newEmail").value.trim();
+    const newPassword = document.getElementById("newPassword").value.trim();
+
+    if (newUsername && newEmail && newPassword) {
+      alert("Signup successful! Please log in.");
+      goToSection('loginpage');
+    } else {
+      alert("Please fill in all fields.");
+    }
+  }
+    
+    document.getElementById("homeIcon")?.addEventListener('click', () => {
+      window.location.href = "index.html";
+    });
+
+    function openModal(id) {
+      document.getElementById(id).style.display = 'flex';
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).style.display = 'none';
+    }
+
+    function getProfile() {
+      return JSON.parse(localStorage.getItem('userProfile') || '{}');
+    }
+
+    function saveProfileData(data) {
+      localStorage.setItem('userProfile', JSON.stringify(data));
+    }
+
+    function renderProfileView() {
+      const p = getProfile();
+      document.getElementById('profileName').textContent = p.name || '-';
+      document.getElementById('profileAge').textContent = p.age || '-';
+      document.getElementById('profileIllness').textContent = p.illness || '-';
+      document.getElementById('profileBio').textContent = p.bio || '-';
+    }
+
+    function prefillSettingsForm() {
+      const p = getProfile();
+      document.getElementById('nameInput').value = p.name || '';
+      document.getElementById('ageInput').value = p.age || '';
+      document.getElementById('illnessInput').value = p.illness || '';
+      document.getElementById('bioInput').value = p.bio || '';
+    }
+
+    document.getElementById('profileIcon')?.addEventListener('click', () => {
+      renderProfileView();
+      openModal('profileModal');
+    });
+
+    document.querySelector("img[alt='Setting']")?.addEventListener('click', () => {
+      prefillSettingsForm();
+      openModal('settingsModal');
+    });
+
+    document.getElementById('btnSaveSettings')?.addEventListener('click', () => {
+      const data = {
+        name: document.getElementById('nameInput').value.trim(),
+        age: document.getElementById('ageInput').value.trim(),
+        illness: document.getElementById('illnessInput').value.trim(),
+        bio: document.getElementById('bioInput').value.trim()
+      };
+      saveProfileData(data);
+      alert('Profile saved successfully!');
+      closeModal('settingsModal');
+    });
+
+    document.getElementById('btnEditProfile')?.addEventListener('click', () => {
+      closeModal('profileModal');
+      prefillSettingsForm();
+      openModal('settingsModal');
+    });
+
+    document.querySelectorAll('.btnClose').forEach(btn => {
+      btn.addEventListener('click', () => closeModal(btn.dataset.modal));
+    });
+  });
+    
+  </script>
+</body>
+</html>
